@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/components/login_form.dart';
+import 'package:flutter_app/components/sign_up_form.dart';
 import 'package:flutter_app/components/social_button.dart';
 import '../utils/config.dart';
 import '../utils/text.dart';
@@ -13,6 +14,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class  AuthPageState extends State <AuthPage> {
+bool isSignIn = true;
+
   @override
   Widget build(BuildContext context) {
   return Scaffold(
@@ -35,7 +38,9 @@ class  AuthPageState extends State <AuthPage> {
             ),
                    Config.spaceSmall,
      Text(
-              AppText.enText['signIn_text']!,
+        isSignIn
+            ?  AppText.enText['signIn_text']!
+            :  AppText.enText['register_text']!,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -43,9 +48,10 @@ class  AuthPageState extends State <AuthPage> {
             ),
 
             Config.spaceSmall,
-            const LoginForm(),
+            isSignIn ? LoginForm() : SignUpForm(),
             Config.spaceSmall,
-Center(
+            isSignIn 
+   ? Center(
   child: TextButton(
     onPressed: () {},
     child: Text(
@@ -57,7 +63,7 @@ Center(
               ),
             ),
   ),
-  ),
+  ) : Container(),
 //add social button sign in
    const Spacer(),
             Center(
@@ -83,21 +89,30 @@ Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: <Widget>[
     Text(
-      AppText.enText['signUp_text']!,
+      isSignIn 
+     ? AppText.enText['signUp_text']!
+     : AppText.enText['registered_text']!,
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: Colors.grey,
       ),
     ),
- const Text(
-  '  Sign Up',
-  style:  TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-    color: Colors.black,
-  ),
-)
+ TextButton(
+  onPressed: () {
+    setState(() {
+      isSignIn = !isSignIn;
+    });
+  },
+   child:  Text(
+    isSignIn ? 'Sign Up' : 'Sign In',
+    style:  const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+   ),
+ )
 
   ],
 )

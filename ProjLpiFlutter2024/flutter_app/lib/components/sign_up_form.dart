@@ -6,25 +6,41 @@ import 'package:flutter_app/providers/dio_provider.dart';
 import 'package:flutter_app/utils/config.dart';
 import 'package:provider/provider.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  final _formKey = GlobalKey<FormState>();
+class _SignUpFormState extends State<SignUpForm> {
+    final _formKey = GlobalKey<FormState>();
+      final _nameController = TextEditingController();
+
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
-  bool obsecurePass = true;
+    bool obsecurePass = true;
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return  Form(
     key: _formKey,
     child: Column(
    mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+            TextFormField(
+            controller: _nameController,
+            keyboardType: TextInputType.text,
+            cursorColor: Config.primaryColor,
+            decoration: const InputDecoration(
+              hintText: 'Username',
+              labelText: 'Username',
+              alignLabelWithHint: true,
+              prefixIcon: Icon(Icons.person_outlined),
+              prefixIconColor: Config.primaryColor,
+    ),
+    ),
+            Config.spaceSmall,
           TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -71,15 +87,26 @@ Consumer<AuthModel>(
   builder: (context, auth, child) {
       return Button(
   width: double.infinity,
-   title: 'Sign In',
+   title: 'Sign Up',
     onPressed: () async {
-      //login here
-      final token = await DioProvider()
+        final userRegistration = await DioProvider()
+              .registerUser(_nameController.text, _emailController.text, _passController.text);
+
+
+      //if register success proceed to login
+          if(userRegistration){
+
+        final token = await DioProvider()
                         .getToken(_emailController.text, _passController.text);
     if(token){
        auth.loginSuccess(); //update login status
        MyApp.navigatorKey.currentState!.pushNamed('main'); //redirect to main page
     }
+        } else{
+          print('register not successful');
+        }
+
+     
 
      //Navigator.of(context).pushNamed('main');
     },
@@ -94,5 +121,6 @@ Consumer<AuthModel>(
     ]
     ),
     );
+
   }
 }
