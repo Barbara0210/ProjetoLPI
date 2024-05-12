@@ -99,7 +99,7 @@ Consumer<AuthModel>(
         final token = await DioProvider()
                         .getToken(_emailController.text, _passController.text);
     if(token){
-       auth.loginSuccess(); //update login status
+       auth.loginSuccess({},{}); //update login status
        MyApp.navigatorKey.currentState!.pushNamed('main'); //redirect to main page
     }
         } else{

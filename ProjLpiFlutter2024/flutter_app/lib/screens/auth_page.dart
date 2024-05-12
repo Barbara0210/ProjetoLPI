@@ -18,6 +18,7 @@ bool isSignIn = true;
 
   @override
   Widget build(BuildContext context) {
+    Config().init(context);
   return Scaffold(
         body: Padding(
       padding: const EdgeInsets.symmetric(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/providers/dio_provider.dart';
 import 'package:flutter_app/utils/config.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
 
@@ -14,8 +16,30 @@ enum FilterStatus {upcoming,complete,cancel}
 class _AppointmentPageState extends State<AppointmentPage> {
   FilterStatus status = FilterStatus.upcoming;//initial status
   Alignment _alignment = Alignment.centerLeft;
+
+ 
 List <dynamic> schedules = [
-  {
+  ];
+
+  Future<void> getAppointments()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    final appointment = await DioProvider().getAppointments(token);
+    if(appointment != 'Error'){
+      setState(() {
+        schedules  = json.decode(appointment);
+        print(schedules);
+      });
+    }
+  }
+
+  @override
+  void initState(){
+    getAppointments();
+    super.initState();
+  }
+
+  /* {
       "doctor_name":"Richard Tan",
       "doctor_profile" : "assets/doctor_2.jpg",
       "category":"Dentalllll",
@@ -39,24 +63,24 @@ List <dynamic> schedules = [
       "category":"General",
       "status":FilterStatus.cancel,
   },
-];
+];*/
 
   @override
   Widget build(BuildContext context) {
     //in this appointment page there are 3 status, upcoming, complete and cancel
     //so need to create 3 status tabs for filterint appointment status
     List <dynamic> filteredSchedules = schedules.where((var schedule){
-      //switch(schedule['status']){
-      //  case 'upcoming' :
-      //   schedule ['status'] = FilterStatus.upcoming;
-       // break;
-      //   case 'complete' :
-     //    schedule ['status'] = FilterStatus.complete;
-     //   break;
-     //    case 'upcoming' :
-      //   schedule ['cancel'] = FilterStatus.cancel;
-            //break;
-    //  }
+      switch(schedule['status']){
+        case 'upcoming' :
+         schedule ['status'] = FilterStatus.upcoming;
+        break;
+        case 'complete' :
+        schedule ['status'] = FilterStatus.complete;
+        break;
+         case 'cancel' :
+        schedule ['status'] = FilterStatus.cancel;
+            break;
+      }
       return schedule['status'] ==status;
     }).toList();
 
@@ -143,7 +167,7 @@ Expanded(
   child: ListView.builder(
     itemCount: filteredSchedules.length,
     itemBuilder: (context, index){
-      var _schedule = filteredSchedules[index];
+      var schedule = filteredSchedules[index];
       bool isLastElement= filteredSchedules.length + 1==index;
       return Card(
         shape: RoundedRectangleBorder(
@@ -163,7 +187,9 @@ Expanded(
               Row(
                 children: [
                   CircleAvatar(
-                  backgroundImage: AssetImage(_schedule['doctor_profile']),
+                  backgroundImage:
+                  // AssetImage(_schedule['doctor_profile']),
+                  NetworkImage("http://10.0.2.2:8000${schedule['doctor_profile']}"),
                   ),
                   const SizedBox(width: 10,),
 
@@ -171,7 +197,7 @@ Expanded(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _schedule['doctor_name'],
+                        schedule['doctor_name'],
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
@@ -179,7 +205,7 @@ Expanded(
                       ),
                       const SizedBox(height: 5,),
                          Text(
-                        _schedule['category'],
+                        schedule['category'],
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
@@ -192,7 +218,12 @@ Expanded(
               ),
               const SizedBox(height: 15,),
               //schedule card
-             const ScheduleCard(),
+             ScheduleCard(
+              date: schedule['date'],
+              day: schedule['day'],
+              time: schedule['time'],
+
+             ),
                const SizedBox(height: 15,
                ),
                Row(
@@ -238,16 +269,15 @@ Expanded(
 }
 
 
-class ScheduleCard extends StatefulWidget {
-  const ScheduleCard({super.key});
+
+class ScheduleCard extends StatelessWidget {
+  const ScheduleCard({Key? key, required this.date, required this.day, required this.time}) : super(key: key);
+  final String date;
+  final String day;
+  final String time;
 
   @override
-  State<ScheduleCard> createState() => _ScheduleCardState();
-}
-
-class _ScheduleCardState extends State<ScheduleCard> {
-  @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
@@ -256,33 +286,37 @@ class _ScheduleCardState extends State<ScheduleCard> {
 width: double.infinity,
 padding: const EdgeInsets.all(20),
 child: Row(
-  crossAxisAlignment:CrossAxisAlignment.center ,
+  crossAxisAlignment:CrossAxisAlignment.center,
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: const <Widget>[
-    Icon(
+  children:  <Widget>[
+    const Icon(
       Icons.calendar_today,
       color:Config.primaryColor,
       size:15,
     ),
-    SizedBox(
+    const SizedBox(
       width: 5,
     ),
     Text(
-      'Monday, 28/11/2022',
-      style: TextStyle(color: Config.primaryColor),
+      '$day,$date',
+      style: const TextStyle(color: Config.primaryColor),
     ),
-    SizedBox(
+   const  SizedBox(
       width: 20,
     ),
-   Icon(
+   const Icon(
       Icons.access_alarm,
       color:Config.primaryColor,
       size:17,
     ),
     const SizedBox(width: 5,),
-    Flexible(child: Text('2:00',style: TextStyle(color: Config.primaryColor),))
+    Flexible(child: Text(time,style: const TextStyle(color: Config.primaryColor),))
   ],
 ),
     );
   }
 }
+
+
+
+

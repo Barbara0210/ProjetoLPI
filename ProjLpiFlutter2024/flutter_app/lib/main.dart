@@ -54,7 +54,7 @@ static final navigatorKey = GlobalKey<NavigatorState>();
       routes: {
         '/':(context) => const AuthPage(),
       'main': (context) => MainLayout(),
-      'doc_details' : (context) => const DoctorDetails(),
+      //'doc_details' : (context) => const DoctorDetails(),
       'booking_page' : (context) => BookingPage(),
       'success_booking':(context) => const AppointmentBooked(),
       },

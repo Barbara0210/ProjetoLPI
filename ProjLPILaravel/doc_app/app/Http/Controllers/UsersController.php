@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+
+
+use App\Models\Appointments;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
-use App\Http\Controllers\Controller;
+use App\Models\Doctor;
 use App\Models\UserDetails;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -17,6 +21,34 @@ class UsersController extends Controller
     public function index()
     {
         //
+        $user = array(); //this will return a set of user and doctor data
+        $user = Auth::user();
+        $doctor = User::where('type','doctor')->get();
+        $details = $user->user_details;
+        $doctorData = Doctor::all();
+
+        //return today appointment together with userdata
+        $date = now()->format('n/j/Y');
+        $appointment = Appointments::where('status','upcoming')->where('date',$date)->first();
+
+        //collect all user and doctor details
+
+        foreach($doctorData as $data){
+            foreach($doctor as $info){
+                if($data['doc_id'] == $info ['id']){
+                    $data['doctor_name'] = $info['name'];
+                    $data['doctor_profile'] =$info ['profile_photo_utl'];
+
+                    if (isset($appointment) && $appointment['doc_id'] == $info['id']){
+                        $data['appointments'] = $appointment;
+                    }
+                }
+            }
+        }
+
+        $user['doctor'] = $doctorData;
+        $user['details'] = $details; //return user details here together with doctor list
+        return $user; //return all data
     }
 
      /**
@@ -71,6 +103,37 @@ class UsersController extends Controller
         'status'=>'active',
    ]);
        return $user;
+    }
+
+
+    public function storeFavDoc(Request $request)
+    {
+
+        $saveFav = UserDetails::where('user_id',Auth::user()->id)->first();
+
+        $docList = json_encode($request->get('favList'));
+
+        //update fav list into database
+        $saveFav->fav = $docList;  //and remember update this as well
+        $saveFav->save();
+
+        return response()->json([
+            'success'=>'The Favorite List is updated',
+        ], 200);
+    }
+
+      /**
+     * logout.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(){
+        $user = Auth::user();
+        $user->currentAccessToken()->delete();
+
+        return response()->json([
+            'success'=>'Logout successfully!',
+        ], 200);
     }
 
     /**
