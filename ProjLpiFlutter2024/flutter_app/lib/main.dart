@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/main_layout.dart';
 import 'package:flutter_app/models/auth_model.dart';
+import 'package:flutter_app/screens/MedicacaoScreen.dart';
 import 'package:flutter_app/screens/auth_page.dart';
 import 'package:flutter_app/screens/booking_page.dart';
 import 'package:flutter_app/screens/doctor_details.dart';
@@ -57,6 +58,7 @@ static final navigatorKey = GlobalKey<NavigatorState>();
       //'doc_details' : (context) => const DoctorDetails(),
       'booking_page' : (context) => BookingPage(),
       'success_booking':(context) => const AppointmentBooked(),
+       'medication': (context) =>  MedicacaoScreen(),
       },
       ),
     );

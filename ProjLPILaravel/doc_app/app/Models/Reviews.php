@@ -16,10 +16,16 @@ class Reviews extends Model
         'reviews',
         'reviewed_by',
         'status',
+        'appointment_id',
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    
+    public function appointment(){
+        return $this->belongsTo(Appointments::class);
     }
 
 

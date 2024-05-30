@@ -11,6 +11,7 @@ class Doctor extends Model
 
     protected $fillable =[
         'doc_id',
+        'nome',
         'category',
         'patients',
         'experience',
@@ -20,5 +21,10 @@ class Doctor extends Model
 
     public function user(){
        return $this->belongsTo(User::class); 
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Reviews::class, 'doc_id', 'id');
     }
 }

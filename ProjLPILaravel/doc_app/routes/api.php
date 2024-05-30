@@ -3,7 +3,7 @@
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\DocsController;
-
+use App\Http\Controllers\ReviewController;
 use App\Models\Appointments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +32,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/fav', [UsersController::class,'storeFavDoc']);
     Route::post('/logout', [UsersController::class,'logout']);
     Route::post('/book',[AppointmentsController::class, 'store']);
-    Route::post('/reviews',[DocsController::class, 'store']);
+    Route::post('/reviews',[AppointmentsController::class, 'storeReview']);
     Route::get('/appointments',[AppointmentsController::class, 'index']); //retrieve appointments
+    Route::put('/appointments/{id}', [AppointmentsController::class, 'update']);
+    Route::get('/reviews', [ReviewController::class, 'getReviewsByAppointment']);
+    Route::put('/reviews/{id}', [ReviewController::class, 'updateReview']);
+    Route::get('/doctors/{doctorId}/latest', [ReviewController::class, 'getLatestReview']);
+
 
 });
+

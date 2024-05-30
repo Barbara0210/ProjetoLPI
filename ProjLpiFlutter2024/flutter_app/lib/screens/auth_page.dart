@@ -50,7 +50,7 @@ bool isSignIn = true;
 
             Config.spaceSmall,
             isSignIn ? LoginForm() : SignUpForm(),
-            Config.spaceSmall,
+          
             isSignIn 
    ? Center(
   child: TextButton(
@@ -64,28 +64,31 @@ bool isSignIn = true;
               ),
             ),
   ),
-  ) : Container(),
+  ) : 
+  Container(
+
+  ),
 //add social button sign in
-   const Spacer(),
-            Center(
-              child: Text(
-                AppText.enText['social-login']!,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey.shade500,
-                ),
-              ),
-            ),
-            Config.spaceSmall,
-   Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const <Widget>[
-                SocialButton(social: 'google'),
-                SocialButton(social: 'facebook'),
-              ],
-            ),
-                 Config.spaceSmall,
+   //const Spacer(),
+        //    Center(
+           //   child: Text(
+            //    AppText.enText['social-login']!,
+           //     style: TextStyle(
+            //      fontSize: 16,
+             //     fontWeight: FontWeight.normal,
+              //    color: Colors.grey.shade500,
+            //    ),
+           //   ),
+         //   ),
+          //  Config.spaceSmall,
+            //  Row(
+           //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           //   children: const <Widget>[
+             //  SocialButton(social: 'google'),
+            //    SocialButton(social: 'facebook'),
+           //   ],
+          // ),
+                
 Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: <Widget>[
@@ -106,7 +109,7 @@ Row(
     });
   },
    child:  Text(
-    isSignIn ? 'Sign Up' : 'Sign In',
+    isSignIn ? 'Registe-se' : 'Inicie Sessão',
     style:  const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,

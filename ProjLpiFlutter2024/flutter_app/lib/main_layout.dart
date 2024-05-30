@@ -3,6 +3,7 @@ import 'package:flutter_app/screens/appointment_page.dart';
 import 'package:flutter_app/screens/fav_page.dart';
 import 'package:flutter_app/screens/home_page.dart';
 import 'package:flutter_app/screens/profile_page.dart';
+import 'package:flutter_app/screens/MedicacaoScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class MainLayout extends StatefulWidget {
   const MainLayout({Key? key}) : super(key: key);
@@ -31,7 +32,9 @@ class _MainLayoutState extends State<MainLayout> {
           //add page here
           FavPage(),
         const  AppointmentPage(),
+           MedicacaoScreen(),
           ProfilePage(),
+       
         ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -53,16 +56,21 @@ class _MainLayoutState extends State<MainLayout> {
             ),
                 BottomNavigationBarItem( 
                     icon: FaIcon(FontAwesomeIcons.solidHeart),
-              label: 'Favorite',
+              label: 'Favoritos',
             ),
               BottomNavigationBarItem( 
                      icon: FaIcon(FontAwesomeIcons.houseChimneyMedical),
-              label: 'Appointments',
+              label: 'Monitorizações',
+            ),
+                  BottomNavigationBarItem( 
+                    icon: FaIcon(FontAwesomeIcons.kitMedical),
+              label: 'Medicação',
             ),
                 BottomNavigationBarItem( 
                     icon: FaIcon(FontAwesomeIcons.solidUser),
-              label: 'Profile',
+              label: 'Perfil',
             ),
+           
           ],
           ),
     );

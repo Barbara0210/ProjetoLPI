@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
             keyboardType: TextInputType.emailAddress,
             cursorColor: Config.primaryColor,
             decoration: const InputDecoration(
-              hintText: 'Email Address',
+              hintText: 'Email ',
               labelText: 'Email',
               alignLabelWithHint: true,
               prefixIcon: Icon(Icons.email_outlined),
@@ -47,8 +47,8 @@ class _LoginFormState extends State<LoginForm> {
             cursorColor: Config.primaryColor,
             obscureText: obsecurePass,
             decoration: InputDecoration(
-                hintText: 'Password',
-                labelText: 'Password',
+                hintText: 'Palavra passe',
+                labelText: 'Palavra passe',
                 alignLabelWithHint: true,
                 prefixIcon: const Icon(Icons.lock_outline),
                 prefixIconColor: Config.primaryColor,
@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             builder: (context, auth, child) {
               return Button(
                 width: double.infinity,
-                title: 'Sign In',
+                title: 'Iniciar Sessão',
                 onPressed: () async {
                   //login here
                   final token = await DioProvider()

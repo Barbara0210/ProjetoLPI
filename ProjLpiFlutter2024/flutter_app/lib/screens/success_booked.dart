@@ -21,7 +21,7 @@ class AppointmentBooked extends StatelessWidget {
               width:double.infinity,
               alignment: Alignment.center,
               child: const Text(
-                'Successfully Booked',
+                'Apreciação feita com sucesso',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class AppointmentBooked extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
               child: Button(
                 width: double.infinity,
-                 title: 'Back to home page',
+                 title: 'Voltar à pagina inicial',
                   onPressed: () => Navigator.of(context).pushNamed('main'),
                    disable: false,
                    ),

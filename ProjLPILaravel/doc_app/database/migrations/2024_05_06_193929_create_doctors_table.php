@@ -18,6 +18,8 @@ return new class extends Migration
         Schema::create('doctors', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('doc_id')->unique();
+            $table->string('name')->nullable();
+
             $table->string('category')->nullable();
             $table->unsignedBigInteger('patients')->nullable();
             $table->unsignedBigInteger('experience')->nullable();

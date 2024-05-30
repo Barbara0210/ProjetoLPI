@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
-import 'package:flutter/widgets.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/providers/dio_provider.dart';
 import 'package:flutter_app/utils/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/models/auth_model.dart';
+import 'profile_details_page.dart'; // Adicione esta linha
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,55 +15,58 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Map<String, dynamic> user = {};
+
   @override
   Widget build(BuildContext context) {
-   return Column(
-    children: [
-      Expanded(
-        flex: 4,
-        child: Container(
-          width: double.infinity,
-          color: Config.primaryColor,
-          child: Column(
-            children: const <Widget>[
-              SizedBox(
-                height: 110,
-              ),
-              CircleAvatar(
-                radius: 65.0,
-                backgroundImage: AssetImage('assets/profile1.jpg'),
-                backgroundColor: Colors.white,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Amanda Tan',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+    Config().init(context);
+    user = Provider.of<AuthModel>(context, listen: false).getUser;
+    return Column(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Container(
+            width: double.infinity,
+            color: Config.primaryColor,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 110,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                '23 years old | female',
+                CircleAvatar(
+                  radius: 65.0,
+                  backgroundImage: AssetImage('assets/profile1.jpg'),
+                  backgroundColor: Colors.white,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  user['name'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  user['email'],
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-
-      Expanded(
-        flex: 5,
-        child: Container(
-          color: Colors.grey[200],
-            child:  Center(
+        Expanded(
+          flex: 5,
+          child: Container(
+            color: Colors.grey[200],
+            child: Center(
               child: Card(
                 margin: const EdgeInsets.fromLTRB(0, 45, 0, 0),
                 child: Container(
@@ -71,12 +76,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.all(5),
                     child: Column(
                       children: [
-                        const Text('Profile',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                        ),),
-                        Divider(color: Colors.grey[300],
+                        const Text(
+                          'Perfil',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[300],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -90,18 +98,24 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 15,
                             ),
                             TextButton(
-                              onPressed: (){},
-                             child: const Text(
-                              "Profile",
-                              style: TextStyle(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileDetailsPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Perfil",
+                                style: TextStyle(
                                   color: Config.primaryColor,
                                   fontSize: 15,
+                                ),
                               ),
-                             ),
-                             ),
+                            ),
                           ],
                         ),
-                    Config.spaceSmall,
+                        Config.spaceSmall,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -114,21 +128,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 15,
                             ),
                             TextButton(
-                              onPressed: (){},
-                             child: const Text(
-                              "History",
-                              style: TextStyle(
+                              onPressed: () {},
+                              child: const Text(
+                                "Histórico",
+                                style: TextStyle(
                                   color: Config.primaryColor,
                                   fontSize: 15,
+                                ),
                               ),
-                             ),
-                             ),
+                            ),
                           ],
                         ),
-
                         Config.spaceSmall,
-
-                          Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Icon(
@@ -140,43 +152,41 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 15,
                             ),
                             TextButton(
-                              onPressed: () async{
-                                final SharedPreferences prefs = 
-                                  await SharedPreferences.getInstance();
+                              onPressed: () async {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
                                 final token = prefs.getString('token') ?? '';
 
-                                if(token.isNotEmpty && token != ''){
+                                if (token.isNotEmpty && token != '') {
                                   final response = await DioProvider().logout(token);
 
-                                  if (response == 200){
+                                  if (response == 200) {
                                     await prefs.remove('token');
                                     setState(() {
                                       MyApp.navigatorKey.currentState!.pushReplacementNamed('/');
                                     });
                                   }
-                                }  
+                                }
                               },
-                             child: const Text(
-                              "LogOut",
-                              style: TextStyle(
+                              child: const Text(
+                                "Terminar Sessão",
+                                style: TextStyle(
                                   color: Config.primaryColor,
                                   fontSize: 15,
+                                ),
                               ),
-                             ),
-                             ),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                    ),
-
+                  ),
                 ),
               ),
             ),
+          ),
         ),
-      ),
-    ],
-
-   );
+      ],
+    );
   }
 }

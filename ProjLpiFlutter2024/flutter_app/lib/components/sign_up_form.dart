@@ -34,7 +34,7 @@ class _SignUpFormState extends State<SignUpForm> {
             cursorColor: Config.primaryColor,
             decoration: const InputDecoration(
               hintText: 'Username',
-              labelText: 'Username',
+              labelText: 'Nome',
               alignLabelWithHint: true,
               prefixIcon: Icon(Icons.person_outlined),
               prefixIconColor: Config.primaryColor,
@@ -61,7 +61,7 @@ class _SignUpFormState extends State<SignUpForm> {
             obscureText: obsecurePass,
             decoration: InputDecoration(
                 hintText: 'Password',
-                labelText: 'Password',
+                labelText: 'Palavra passe',
                 alignLabelWithHint: true,
                 prefixIcon: const Icon(Icons.lock_outline),
                 prefixIconColor: Config.primaryColor,
@@ -87,7 +87,7 @@ Consumer<AuthModel>(
   builder: (context, auth, child) {
       return Button(
   width: double.infinity,
-   title: 'Sign Up',
+   title: 'Registar',
     onPressed: () async {
         final userRegistration = await DioProvider()
               .registerUser(_nameController.text, _emailController.text, _passController.text);

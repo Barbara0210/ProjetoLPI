@@ -9,7 +9,9 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
  class DioProvider{
+  final Dio _dio = Dio();
 
+  static const String baseUrl = 'http://10.0.2.2:8000/api';
 //get token
 Future<dynamic> getToken(String email, String password) async{
   try {
@@ -76,60 +78,22 @@ try{
 
 
 //store booking details
-Future<dynamic>bookAppointment(
-  String date, String day, String time,int doctor,String token) async{
-
-    try{
-var response = await Dio().post('http://10.0.2.2:8000/api/book',
-    data: {'date' : date,'day' : day, 'time' : time, 'doctor_id' :doctor },
-      options: Options(headers:{'Authorization': 'Bearer $token'})
-    );
-    if(response.statusCode == 200 && response.data != '') {
-      return response.statusCode;
-    } else{
-      return 'Error';
-    }
-    }
-    catch (error){
-      return error;
-    }
-    
-  }
-
-  //retrieve booking details
-Future<dynamic>getAppointments(String token) async{
-
-    try{
-var response = await Dio().get('http://10.0.2.2:8000/api/appointments',
-      options: Options(headers:{'Authorization': 'Bearer $token'})
-    );
-    if(response.statusCode == 200 && response.data != '') {
-      return json.encode(response.data);
-    } else{
-      return 'Error';
-    }
-    }
-    catch (error){
-      return error;
-    }
-    
-  }
-
- //store rating details
-  Future<dynamic> storeReviews(
-      String reviews, double ratings, int id, int doctor, String token) async {
+Future<dynamic> bookAppointment(
+      String date, String day, String time, int doctorId, String token) async {
     try {
-      var response = await Dio().post('http://10.0.2.2:8000/api/reviews',
-          data: {
-            'ratings': ratings,
-            'reviews': reviews,
-            'appointment_id': id,
-            'doctor_id': doctor
-          },
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      var response = await Dio().post(
+        'http://10.0.2.2:8000/api/book',
+        data: {
+          'date': date,
+          'day': day,
+          'time': time,
+          'doctor_id': doctorId,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
 
       if (response.statusCode == 200 && response.data != '') {
-        return response.statusCode;
+        return response.data;
       } else {
         return 'Error';
       }
@@ -137,6 +101,173 @@ var response = await Dio().get('http://10.0.2.2:8000/api/appointments',
       return error;
     }
   }
+
+  //retrieve booking details
+Future<dynamic> getAppointments(String token) async {
+  try {
+    if (token.isEmpty) {
+      return 'Error: No token provided';
+    }
+
+    var response = await Dio().get(
+      'http://10.0.2.2:8000/api/appointments',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode == 200 && response.data != '') {
+      print('Appointments data received: ${response.data}');
+      return json.encode(response.data);
+    } else {
+      print('Error: Unexpected response - status code ${response.statusCode}');
+      return 'Error';
+    }
+  } catch (error) {
+    print('Error: $error');
+    return 'Error: $error';
+  }
+}
+
+    Future<dynamic> updateAppointment(String id, String date, String day, String time) async {
+    try {
+      var response = await Dio().put(
+        'http://10.0.2.2:8000/api/appointments/$id',
+        data: {
+          'date': date,
+          'day': day,
+          'time': time,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return 'Success';
+      } else {
+        return 'Error';
+      }
+    } catch (error) {
+      return 'Error: $error';
+    }
+  }
+
+ //store rating details
+Future<dynamic> storeReviews(
+    String reviews, double ratings, int appointmentId, int doctorId, String token) async {
+  try {
+    var response = await Dio().post(
+      'http://10.0.2.2:8000/api/reviews',
+      data: {
+        'ratings': ratings,
+        'reviews': reviews,
+        'appointment_id': appointmentId, // Include appointment_id
+        'doctor_id': doctorId
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    print('Response status code: ${response.statusCode}');
+    print('Response data: ${response.data}');
+
+    if (response.statusCode == 201 && response.data != '') {
+      return response.statusCode;
+    } else {
+      return 'Error';
+    }
+  } catch (error) {
+    print('Error in storeReviews: $error');
+    return error;
+  }
+}
+  Future<dynamic> fetchReview(int appointmentId, String token) async {
+    try {
+      var response = await Dio().get(
+        'http://10.0.2.2:8000/api/reviews',
+        queryParameters: {'appointment_id': appointmentId},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200 && response.data.isNotEmpty) {
+        return response.data[0];
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('Error fetching review: $error');
+      return null;
+    }
+  }
+
+    Future<Map<String, dynamic>?> getLastReview(String doctorId, String token) async {
+    try {
+      if (token.isEmpty) {
+        return Future.error('Error: No token provided');
+      }
+
+      var response = await _dio.get(
+        '$baseUrl/doctors/$doctorId/latest',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200 && response.data != '') {
+        print('Last review data received: ${response.data}');
+        return response.data;
+      } else {
+        print('Error: Unexpected response - status code ${response.statusCode}');
+        return Future.error('Error: Unexpected response');
+      }
+    } catch (error) {
+      print('Error: $error');
+      return Future.error('Error: $error');
+    }
+  }
+  /*
+ Future<dynamic> getLastReview(String doctorId, String token) async {
+    try {
+      if (token.isEmpty) {
+        return 'Error: No token provided';
+      }
+
+      var response = await Dio().get(
+        'http://10.0.2.2:8000/api/doctors/$doctorId/reviews/latest',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200 && response.data != '') {
+        print('Last review data received: ${response.data}');
+        return response.data;
+      } else {
+        print('Error: Unexpected response - status code ${response.statusCode}');
+        return 'Error';
+      }
+    } catch (error) {
+      print('Error: $error');
+      return 'Error: $error';
+    }
+  }
+*/
+  
+
+ Future<dynamic> updateReview(int reviewId, String comment, double rating, String token) async {
+    try {
+      var response = await Dio().put(
+        'http://10.0.2.2:8000/api/reviews/$reviewId',
+        data: {
+          'reviews': comment,
+          'ratings': rating,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        print('Error: Unexpected response - status code ${response.statusCode}');
+        return null;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return null;
+    }
+  }
+
 
   //store fav doctor
   Future<dynamic> storeFavDoc(String token, List<dynamic> favList) async {

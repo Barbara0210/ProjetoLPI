@@ -11,7 +11,7 @@ import '../utils/config.dart';
 class AppointmentCard extends StatefulWidget {
   const AppointmentCard({Key? key, required this.doctor, required this.color}) : super(key: key);
 
-  final Map<String,dynamic> doctor;
+  final Map<String,dynamic> doctor; 
   final Color color;
 
   @override
@@ -100,7 +100,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                               return RatingDialog(
                                   initialRating: 1.0,
                                   title: const Text(
-                                    'Rate the Doctor',
+                                    'Qual o estado do utente',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 25,
@@ -108,15 +108,17 @@ class _AppointmentCardState extends State<AppointmentCard> {
                                     ),
                                   ),
                                   message: const Text(
-                                    'Please help us to rate our Doctor',
+                                    'Como se encontra o utente',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 15,
                                     ),
                                   ),
-                                  image: const FlutterLogo(
-                                    size: 100,
-                                  ),
+                                 image: Image.asset(
+                                "assets/healthcare.png", // path to your asset image
+                                height: 100,
+                                width: 100,
+                              ),
                                   submitButtonText: 'Submit',
                                   commentHint: 'Your Reviews',
                                   onSubmitted: (response) async {
@@ -140,8 +142,10 @@ class _AppointmentCardState extends State<AppointmentCard> {
                                       MyApp.navigatorKey.currentState!
                                           .pushNamed('main');
                                     }
-                                  });
-                            });
+                                  }
+                                  );
+                            }
+                            );
                       },
                       child: const Text(
                         'Completed',

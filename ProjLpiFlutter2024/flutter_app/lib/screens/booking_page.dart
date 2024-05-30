@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/components/SmileRatingDialog.dart';
 import 'package:flutter_app/components/button.dart';
 import 'package:flutter_app/components/custom_appbar.dart';
 import 'package:flutter_app/main.dart';
@@ -7,8 +8,7 @@ import 'package:flutter_app/utils/config.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
-import '../models/booking_datetime_converted.dart';
+import 'package:flutter_app/screens/doctor_details.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -18,196 +18,222 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  //declaration
-  CalendarFormat _format = CalendarFormat.month;
-  DateTime _focusDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
-  int? _currentIndex;
-  bool _isWeekend = false;
-  bool _dataSelected = false;
-  bool _timeSelected = false;
-  String? token; //get token for insert booking date and time into database
+  String? token;
+  Map<String, dynamic>? latestReview;
+  bool _isInitialized = false;
+  String? _errorMessage;
 
-Future<void>getToken()async{
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  token = prefs.getString('token') ?? '';
-}
+  Future<void> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? '';
+  }
 
+  Future<void> fetchLatestReview(int doctorId) async {
+    if (token == null) await getToken(); // Ensure token is available
+    try {
+      final review = await DioProvider().getLastReview(doctorId.toString(), token!);
+      setState(() {
+        latestReview = review;
+        _errorMessage = null;
+      });
+    } catch (error) {
+      setState(() {
+        _errorMessage = error.toString();
+      });
+    }
+  }
 
-@override
-void initState(){
-  getToken();
-  super.initState();
-}
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final doctor = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final doctorId = doctor['doctor_id'];
+      getToken().then((_) => fetchLatestReview(doctorId));
+      _isInitialized = true;
+    }
+  }
+
+  Widget _buildSmileIcon(double rating) {
+    IconData icon;
+    Color color;
+
+    if (rating == 1) {
+      icon = FontAwesomeIcons.solidFaceFrown;
+      color = Colors.red;
+    } else if (rating == 2) {
+      icon = FontAwesomeIcons.solidFaceMeh;
+      color = Colors.yellow;
+    } else if (rating == 3) {
+      icon = FontAwesomeIcons.solidFaceSmile;
+      color = Colors.green;
+    } else {
+      icon = FontAwesomeIcons.question;
+      color = Colors.grey;
+    }
+
+    return Icon(
+      icon,
+      color: color,
+      size: 24,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     Config().init(context);
-    final doctor = ModalRoute.of(context)!.settings.arguments as Map;
+    final doctor = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final doctorId = doctor['doctor_id'];
+    final doctorName = doctor['nome'];
 
     return Scaffold(
       appBar: CustomAppBar(
-        appTitle: 'Appointment',
+        appTitle: 'Monitorização/Utente',
         icon: const FaIcon(Icons.arrow_back_ios),
       ),
-
       body: CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(
-            child: Column (
-              children:  <Widget>[
-                 _tableCalendar(),
-                 const Padding(
-                  padding:EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-                  child: Center(  
-                    child: Text(
-                      'Selected Consultation Time',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-            ),
-                  )
-//display table calendar here
-              ],
-              ),
+            child: AboutDoctor(doctor: doctor),
           ),
-
-          _isWeekend 
-          ? SliverToBoxAdapter(
-              child: Container (
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 30,
-            
-                ),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Weekend is not available, please select another date',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
-              ),
-          ) : SliverGrid(
-            delegate: SliverChildBuilderDelegate((context,index){
-              return InkWell(
-                splashColor: Colors.transparent,
-                onTap: (){
-                    setState(() {
-                      //when selected,update current index and set time selected to true
-                      _currentIndex = index;
-                      _timeSelected = true;
-                    });
-                },
-                child: Container(
-                    margin: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _currentIndex == index
-                        ? Colors.white
-                        : Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      color: _currentIndex == index
-                      ? Config.primaryColor
-                      : null,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${index+9}:00 ${index+9>11 ? "PM" : "AM"}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: _currentIndex == index ? Colors.white : null,
-                      ),
-                    ),
-                ),
-              );
-            },
-            childCount: 8,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+              child: _errorMessage != null
+                  ? Text('Error: $_errorMessage', style: TextStyle(color: Colors.red))
+                  : latestReview != null
+                      ? Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 3,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Ultima Avaliação',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  _buildSmileIcon(latestReview!['ratings'].toDouble()), // Ensure rating is double
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Apreciação: ${latestReview!['ratings']}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.comment, color: Colors.grey),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      'Commentário: ${latestReview!['reviews']}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.person, color: Colors.blue),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Avaliado por: ${latestReview!['user']['name']}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.calendar_today, color: Colors.green),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Data da monitorização: ${latestReview!['appointment']['date']}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.access_time, color: Colors.red),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Hora da monitorização: ${latestReview!['appointment']['time']}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      : Center(child: Text('Sem avaliações anteriores')),
             ),
-             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 1.5
-              ),
-             ),
-    SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 80),
-          child: Button(
-            width: double.infinity,
-           title: 'Make Appointment',
-            onPressed: () async{
-              //press button here to store booking details, like date and time
-              // so now, lets build appointment controller first 
-              final getDate = DateConverted.getDate(_currentDay);
-              final getDay = DateConverted.getDay(_currentDay.weekday);
-              final getTime = DateConverted.getTime(_currentIndex!);
-              //Navigator.of(context).pushNamed('success_booking');
-            //pass all details together with doctor id and token
-            
-              final booking = await DioProvider().bookAppointment(getDate, getDay, getTime, doctor['doctor_id'], token!);
-              // if booking return status code 200, then redirect to success booking page
-                if(booking == 200){
-                  MyApp.navigatorKey.currentState!
-                  .pushNamed('success_booking');
-                }
-              
-            },
-             disable: _timeSelected && _dataSelected ? false : true,
-              ),
-      ),
-    )
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Button(
+                width: double.infinity,
+                title: 'Fazer avaliação',
+                onPressed: () async {
+                  final getDate = _currentDay.toIso8601String().split('T')[0];
+                  final getDay = _currentDay.weekday.toString();
+                  final getTime = TimeOfDay.now().format(context);
 
+                  try {
+                    final booking = await DioProvider().bookAppointment(getDate, getDay, getTime, doctorId, token!);
+
+                    if (booking != 'Error') {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SmileRatingDialog(
+                            onSubmitted: (double rating, String comment) async {
+                              final reviewResponse = await DioProvider().storeReviews(
+                                  comment, rating, booking['id'], doctorId, token!);
+                              print(reviewResponse);
+                              if (reviewResponse == 201) {
+                                MyApp.navigatorKey.currentState!.pushNamed('success_booking');
+                              }
+                            },
+                          );
+                        },
+                      );
+                    } else {
+                      print('Failed to book appointment');
+                    }
+                  } catch (e) {
+                    print('Error booking appointment: $e');
+                  }
+                },
+                disable: false,
+              ),
+            ),
+          ),
         ],
-
       ),
-
     );
   }
-Widget _tableCalendar (){
-  return TableCalendar(
-    focusedDay: _focusDay,
-   firstDay: DateTime.now(),
-  lastDay: DateTime(2024,12,31),
-  calendarFormat: _format,
-  currentDay: _currentDay,
-  rowHeight: 48,
-  calendarStyle: const CalendarStyle(
-    todayDecoration: BoxDecoration(
-      color: Config.primaryColor, shape: BoxShape.circle
-
-    ),
-  ),
-  availableCalendarFormats: const {
-    CalendarFormat.month: 'Month',
-  },
-  onFormatChanged: (format) {
-      setState(() {
-        _format = format;
-
-      });
-    
-  },
-  onDaySelected:  ((selectedDay, focusedDay)
-  {
-    setState(() {
-      _currentDay = selectedDay;
-      _focusDay = focusedDay;
-      _dataSelected = true;
-      if (selectedDay.weekday == 6 || selectedDay.weekday == 7 ){
-        _isWeekend = true;
-        _timeSelected = false;
-        _currentIndex = null;
-      } 
-      else {
-        _isWeekend = false;
-      }
-    });
-  }),
-  );
-}
-
 }

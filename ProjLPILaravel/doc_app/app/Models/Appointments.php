@@ -15,12 +15,17 @@ class Appointments extends Model
         'date',
         'day',
         'time',
-        'status'
-
-
+        'status',
+      
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function doctor(){
+        return $this->belongsTo(User::class, 'doc_id');
+    }
+    public function review() {
+        return $this->hasOne(Reviews::class, 'appointment_id');
     }
 }

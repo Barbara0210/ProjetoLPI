@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointments;
 use App\Models\Reviews;
-
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,12 +24,21 @@ class DocsController extends Controller
         return view('dashboard')->with(['doctor'=>$doctor, 'appointments'=>$appointments, 'reviews'=>$reviews]);
     }
 
+
+    public function listindex()
+    {
+        $doctors = Doctor::all();
+        return view('doctors.index', compact('doctors'));
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         //
+        return view( 'doctors.create');
     }
 
      /**
@@ -63,35 +72,70 @@ class DocsController extends Controller
         ], 200);
     }
 
+
+    public function createUtente()
+    {
+        return view('doctors.create');
+    }
+
+    public function storeUtente(Request $request)
+    {
+        $validatedData = $request->validate([
+            'doc_id' => 'required',
+            'nome' => 'required',
+            'category' => 'required',
+            'patients' => 'required|integer',
+            'experience' => 'required|integer',
+            'bio_data' => 'required',
+            'status' => 'required',
+        ]);
+
+        Doctor::create($validatedData);
+
+        return redirect()->route('doctors.create')->with('success', 'Doctor created successfully!');
+    }
+
+    
+
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $doctor = Doctor::findOrFail($id);
+        return view('doctors.show', compact('doctor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $doctor = Doctor::findOrFail($id);
+        return view('doctors.edit', compact('doctor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            // Definir regras de validação conforme necessário para a atualização do médico
+        ]);
+
+        Doctor::whereId($id)->update($validatedData);
+        
+        return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $doctor = Doctor::findOrFail($id);
+        $doctor->delete();
+        return redirect()->route('doctors.index')->with('success', 'Doctor deleted successfully!');
     }
 }
