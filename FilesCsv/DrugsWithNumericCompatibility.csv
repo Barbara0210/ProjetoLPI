@@ -1,0 +1,101 @@
+Drug 1;Drug 2;Value
+Adrenaline;Adrenaline;1
+Adrenaline;Alfentanil;7
+Adrenaline;Aminophyline;2
+Adrenaline;Amiodarona;1
+Adrenaline;Atracurium;1
+Adrenaline;Bicabornato de sodio;2
+Adrenaline;Calcio;1
+Adrenaline;Cetorolac;7
+Adrenaline;Ciprofloxacin;7
+Adrenaline;Cis-atracurium;7
+Alfentanil;Adrenaline;7
+Alfentanil;Alfentanil;1
+Alfentanil;Aminophyline;7
+Alfentanil;Amiodarona;2
+Alfentanil;Atracurium;1
+Alfentanil;Bicabornato de sodio;7
+Alfentanil;Calcio;7
+Alfentanil;Cetorolac;7
+Alfentanil;Ciprofloxacin;7
+Alfentanil;Cis-atracurium;1
+Aminophyline;Adrenaline;2
+Aminophyline;Alfentanil;7
+Aminophyline;Aminophyline;1
+Aminophyline;Amiodarona;2
+Aminophyline;Atracurium;2
+Aminophyline;Bicabornato de sodio;1
+Aminophyline;Calcio;7
+Aminophyline;Cetorolac;1
+Aminophyline;Ciprofloxacin;2
+Aminophyline;Cis-atracurium;2
+Amiodarona;Adrenaline;1
+Amiodarona;Alfentanil;2
+Amiodarona;Aminophyline;2
+Amiodarona;Amiodarona;1
+Amiodarona;Atracurium;1
+Amiodarona;Bicabornato de sodio;2
+Amiodarona;Calcio;7
+Amiodarona;Cetorolac;7
+Amiodarona;Ciprofloxacin;7
+Amiodarona;Cis-atracurium;2
+Atracurium;Adrenaline;1
+Atracurium;Alfentanil;1
+Atracurium;Aminophyline;2
+Atracurium;Amiodarona;1
+Atracurium;Atracurium;1
+Atracurium;Bicabornato de sodio;7
+Atracurium;Calcio;7
+Atracurium;Cetorolac;7
+Atracurium;Ciprofloxacin;7
+Atracurium;Cis-atracurium;7
+Bicabornato de sodio;Adrenaline;2
+Bicabornato de sodio;Alfentanil;7
+Bicabornato de sodio;Aminophyline;1
+Bicabornato de sodio;Amiodarona;2
+Bicabornato de sodio;Atracurium;7
+Bicabornato de sodio;Bicabornato de sodio;1
+Bicabornato de sodio;Calcio;2
+Bicabornato de sodio;Cetorolac;7
+Bicabornato de sodio;Ciprofloxacin;7
+Bicabornato de sodio;Cis-atracurium;7
+Calcio;Adrenaline;1
+Calcio;Alfentanil;7
+Calcio;Aminophyline;7
+Calcio;Amiodarona;7
+Calcio;Atracurium;7
+Calcio;Bicabornato de sodio;2
+Calcio;Calcio;1
+Calcio;Cetorolac;7
+Calcio;Ciprofloxacin;7
+Calcio;Cis-atracurium;7
+Cetorolac;Adrenaline;7
+Cetorolac;Alfentanil;7
+Cetorolac;Aminophyline;1
+Cetorolac;Amiodarona;7
+Cetorolac;Atracurium;7
+Cetorolac;Bicabornato de sodio;7
+Cetorolac;Calcio;7
+Cetorolac;Cetorolac;1
+Cetorolac;Ciprofloxacin;7
+Cetorolac;Cis-atracurium;7
+Ciprofloxacin;Adrenaline;7
+Ciprofloxacin;Alfentanil;1
+Ciprofloxacin;Aminophyline;2
+Ciprofloxacin;Amiodarona;7
+Ciprofloxacin;Atracurium;7
+Ciprofloxacin;Bicabornato de sodio;7
+Ciprofloxacin;Calcio;7
+Ciprofloxacin;Cetorolac;7
+Ciprofloxacin;Ciprofloxacin;1
+Ciprofloxacin;Cis-atracurium;1
+Cis-atracurium;Adrenaline;7
+Cis-atracurium;Alfentanil;7
+Cis-atracurium;Aminophyline;2
+Cis-atracurium;Amiodarona;2
+Cis-atracurium;Atracurium;7
+Cis-atracurium;Bicabornato de sodio;7
+Cis-atracurium;Calcio;7
+Cis-atracurium;Cetorolac;7
+Cis-atracurium;Ciprofloxacin;1
+Cis-atracurium;Cis-atracurium;1

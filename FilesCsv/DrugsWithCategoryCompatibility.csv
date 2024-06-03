@@ -1,0 +1,101 @@
+Drug 1;Drug 2;Value
+Adrenaline;Adrenaline;compativel
+Adrenaline;Alfentanil;noinfo
+Adrenaline;Aminophyline;incompativel
+Adrenaline;Amiodarona;compativel
+Adrenaline;Atracurium;compativel
+Adrenaline;Bicabornato de sodio;incompativel
+Adrenaline;Calcio;compativel
+Adrenaline;Cetorolac;noinfo
+Adrenaline;Ciprofloxacin;noinfo
+Adrenaline;Cis-atracurium;noinfo
+Alfentanil;Adrenaline;noinfo
+Alfentanil;Alfentanil;compativel
+Alfentanil;Aminophyline;noinfo
+Alfentanil;Amiodarona;incompativel
+Alfentanil;Atracurium;compativel
+Alfentanil;Bicabornato de sodio;noinfo
+Alfentanil;Calcio;noinfo
+Alfentanil;Cetorolac;noinfo
+Alfentanil;Ciprofloxacin;noinfo
+Alfentanil;Cis-atracurium;compativel
+Aminophyline;Adrenaline;incompativel
+Aminophyline;Alfentanil;noinfo
+Aminophyline;Aminophyline;compativel
+Aminophyline;Amiodarona;incompativel
+Aminophyline;Atracurium;incompativel
+Aminophyline;Bicabornato de sodio;compativel
+Aminophyline;Calcio;noinfo
+Aminophyline;Cetorolac;compativel
+Aminophyline;Ciprofloxacin;incompativel
+Aminophyline;Cis-atracurium;incompativel
+Amiodarona;Adrenaline;compativel
+Amiodarona;Alfentanil;incompativel
+Amiodarona;Aminophyline;incompativel
+Amiodarona;Amiodarona;compativel
+Amiodarona;Atracurium;compativel
+Amiodarona;Bicabornato de sodio;incompativel
+Amiodarona;Calcio;noinfo
+Amiodarona;Cetorolac;noinfo
+Amiodarona;Ciprofloxacin;noinfo
+Amiodarona;Cis-atracurium;incompativel
+Atracurium;Adrenaline;compativel
+Atracurium;Alfentanil;compativel
+Atracurium;Aminophyline;incompativel
+Atracurium;Amiodarona;compativel
+Atracurium;Atracurium;compativel
+Atracurium;Bicabornato de sodio;noinfo
+Atracurium;Calcio;noinfo
+Atracurium;Cetorolac;noinfo
+Atracurium;Ciprofloxacin;noinfo
+Atracurium;Cis-atracurium;noinfo
+Bicabornato de sodio;Adrenaline;incompativel
+Bicabornato de sodio;Alfentanil;noinfo
+Bicabornato de sodio;Aminophyline;compativel
+Bicabornato de sodio;Amiodarona;incompativel
+Bicabornato de sodio;Atracurium;noinfo
+Bicabornato de sodio;Bicabornato de sodio;compativel
+Bicabornato de sodio;Calcio;incompativel
+Bicabornato de sodio;Cetorolac;noinfo
+Bicabornato de sodio;Ciprofloxacin;noinfo
+Bicabornato de sodio;Cis-atracurium;noinfo
+Calcio;Adrenaline;compativel
+Calcio;Alfentanil;noinfo
+Calcio;Aminophyline;noinfo
+Calcio;Amiodarona;noinfo
+Calcio;Atracurium;noinfo
+Calcio;Bicabornato de sodio;incompativel
+Calcio;Calcio;compativel
+Calcio;Cetorolac;noinfo
+Calcio;Ciprofloxacin;noinfo
+Calcio;Cis-atracurium;noinfo
+Cetorolac;Adrenaline;noinfo
+Cetorolac;Alfentanil;noinfo
+Cetorolac;Aminophyline;compativel
+Cetorolac;Amiodarona;noinfo
+Cetorolac;Atracurium;noinfo
+Cetorolac;Bicabornato de sodio;noinfo
+Cetorolac;Calcio;noinfo
+Cetorolac;Cetorolac;compativel
+Cetorolac;Ciprofloxacin;noinfo
+Cetorolac;Cis-atracurium;noinfo
+Ciprofloxacin;Adrenaline;noinfo
+Ciprofloxacin;Alfentanil;compativel
+Ciprofloxacin;Aminophyline;incompativel
+Ciprofloxacin;Amiodarona;noinfo
+Ciprofloxacin;Atracurium;noinfo
+Ciprofloxacin;Bicabornato de sodio;noinfo
+Ciprofloxacin;Calcio;noinfo
+Ciprofloxacin;Cetorolac;noinfo
+Ciprofloxacin;Ciprofloxacin;compativel
+Ciprofloxacin;Cis-atracurium;compativel
+Cis-atracurium;Adrenaline;noinfo
+Cis-atracurium;Alfentanil;noinfo
+Cis-atracurium;Aminophyline;incompativel
+Cis-atracurium;Amiodarona;incompativel
+Cis-atracurium;Atracurium;noinfo
+Cis-atracurium;Bicabornato de sodio;noinfo
+Cis-atracurium;Calcio;noinfo
+Cis-atracurium;Cetorolac;noinfo
+Cis-atracurium;Ciprofloxacin;compativel
+Cis-atracurium;Cis-atracurium;compativel
