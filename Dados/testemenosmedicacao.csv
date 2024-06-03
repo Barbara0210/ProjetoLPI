@@ -1,7 +1,0 @@
-﻿Drug 1;Drug 2;Value
-Adrenaline;Alfentanil;noinfo
-Alfentanil;Adrenaline;noinfo
-Adrenaline;Aminophyline;incompativel
-Aminophyline;Adrenaline;incompativel
-Aminophyline;Bicabornato de sodio;compativel
-Bicabornato de sodio;Aminophyline;compativel
